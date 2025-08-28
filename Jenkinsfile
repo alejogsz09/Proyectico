@@ -15,12 +15,10 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh '''
-                    echo "📂 Estructura completa del workspace:"
-                    ls -R
-
-                    echo "📂 Archivos en la raíz del workspace:"
+                    echo "📂 Estructura del workspace:"
                     ls -la
 
+                    echo "🐍 Versiones instaladas:"
                     python3 --version
                     pip3 --version
 
@@ -29,7 +27,7 @@ pipeline {
                         pip3 install --upgrade pip
                         pip3 install -r requirements.txt
                     else
-                        echo "❌ ERROR: No se encontró requirements.txt en la raíz del workspace"
+                        echo "❌ ERROR: No se encontró requirements.txt en la raíz"
                         exit 1
                     fi
                 '''
@@ -39,7 +37,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    echo "🚀 Ejecutando pruebas con pytest..."
+                    echo "🚀 Ejecutando pruebas..."
                     pytest --maxfail=1 --disable-warnings -q
                 '''
             }
@@ -59,11 +57,9 @@ pipeline {
                 message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}"
             )
         }
-        always {
-            echo "Pipeline finalizado."
-        }
     }
 }
+
 
 
 
