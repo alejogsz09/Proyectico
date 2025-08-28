@@ -5,19 +5,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Compilando..."
-                // error intencional si quieres probar fallos
-                // sh 'exit 1'
+                // fuerza un fallo para probar la notificación
+                sh 'exit 1'
             }
         }
     }
 
     post {
         success {
-            slackSend(channel: '#notificaciones-dev',
+            slackSend(channel: '#notificaciones_repo',
                       message: "✅ Éxito: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}")
         }
         failure {
-            slackSend(channel: '#notificaciones-dev',
+            slackSend(channel: '#notificaciones_repo',
                       message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}")
         }
         always {
@@ -25,5 +25,6 @@ pipeline {
         }
     }
 }
+
 
 
