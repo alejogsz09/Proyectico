@@ -15,8 +15,10 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh '''
-                    python3 -m pip install --upgrade pip
-                    pip install -r requirements.txt
+                    python3 --version
+                    pip3 --version
+                    pip3 install --upgrade pip
+                    pip3 install -r requirements.txt
                 '''
             }
         }
@@ -32,19 +34,16 @@ pipeline {
 
     post {
         success {
-            slackSend(
-                channel: '#notificaciones_repo',
-                message: "✅ Éxito: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}"
-            )
+            slackSend(channel: '#notificaciones_repo',
+                      message: "✅ Éxito: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}")
         }
         failure {
-            slackSend(
-                channel: '#notificaciones_repo',
-                message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}"
-            )
+            slackSend(channel: '#notificaciones_repo',
+                      message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}")
         }
     }
 }
+
 
 
 
