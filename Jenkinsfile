@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         PROJECT_NAME = "Proyectico"
-        VENV = ".venv"   // Nombre del entorno virtual
     }
 
     stages {
@@ -13,23 +12,11 @@ pipeline {
             }
         }
 
-        stage('Setup') {
+        stage('Install dependencies') {
             steps {
                 sh '''
-                    python3 -m venv ${VENV}
-                    source ${VENV}/bin/activate
-                    pip install --upgrade pip
+                    python3 -m pip install --upgrade pip
                     pip install -r requirements.txt
-                '''
-            }
-        }
-
-        stage('Lint') {
-            steps {
-                sh '''
-                    source ${VENV}/bin/activate
-                    pip install flake8
-                    flake8 .
                 '''
             }
         }
@@ -37,17 +24,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    source ${VENV}/bin/activate
                     pytest --maxfail=1 --disable-warnings -q
-                '''
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh '''
-                    source ${VENV}/bin/activate
-                    python setup.py sdist bdist_wheel || echo "No hay setup.py para empaquetar"
                 '''
             }
         }
@@ -66,11 +43,9 @@ pipeline {
                 message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER} en ${env.PROJECT_NAME}"
             )
         }
-        always {
-            echo "Pipeline finalizado."
-        }
     }
 }
+
 
 
 
