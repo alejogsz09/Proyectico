@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    // --- CAMBIO PRINCIPAL AQUÍ ---
-    // Jenkins buscará una herramienta Python configurada con este nombre.
-    tools {
-        python 'MiPython313'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -15,14 +9,13 @@ pipeline {
         }
         stage('Install dependencies') {
             steps {
-                // No se necesita la ruta completa, Jenkins la agrega al PATH.
                 bat 'python -m pip install --upgrade pip'
                 bat 'python -m pip install -r requirements.txt'
             }
         }
         stage('Test') {
             steps {
-                bat 'pytest'
+                bat 'pytest || exit 1'
             }
         }
     }
@@ -36,6 +29,16 @@ pipeline {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
