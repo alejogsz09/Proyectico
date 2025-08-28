@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/TU_USUARIO/ejemplo-jenkins-slack.git'
+                git branch: 'main', url: 'https://github.com/alejogsz09/Proyectico.git'
             }
         }
 
