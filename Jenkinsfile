@@ -2,21 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Prueba Slack') {
             steps {
-                git branch: 'main', url: 'https://github.com/alejogsz09/Proyectico.git'
-            }
-        }
-
-        stage('Instalar dependencias') {
-            steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Tests') {
-            steps {
-                sh 'pytest tests/ --maxfail=1 --disable-warnings -q'
+                echo "Ejecutando prueba de notificación en Slack..."
             }
         }
     }
@@ -36,5 +24,13 @@ pipeline {
                 message: "❌ Falló el build en *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Ver detalles>)"
             )
         }
+        always {
+            slackSend (
+                channel: '#notificaciones-dev',
+                color: '#439FE0',
+                message: "ℹ️ El pipeline finalizó (sea éxito o fallo) en *${env.JOB_NAME}* #${env.BUILD_NUMBER}"
+            )
+        }
     }
 }
+
