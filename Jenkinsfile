@@ -2,35 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Prueba Slack') {
+        stage('Build') {
             steps {
-                echo "Ejecutando prueba de notificación en Slack..."
+                echo "Compilando..."
+                // error intencional si quieres probar fallos
+                // sh 'exit 1'
             }
         }
     }
 
     post {
         success {
-            slackSend (
-                channel: '#notificacionesr_epo',
-                color: 'good',
-                message: "✅ Build exitoso en *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Ver detalles>)"
-            )
+            slackSend(channel: '#notificaciones-dev',
+                      message: "✅ Éxito: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}")
         }
         failure {
-            slackSend (
-                channel: '#notificaciones_repo',
-                color: 'danger',
-                message: "❌ Falló el build en *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Ver detalles>)"
-            )
+            slackSend(channel: '#notificaciones-dev',
+                      message: "❌ Falló: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}")
         }
         always {
-            slackSend (
-                channel: '#notificiones_repo',
-                color: '#439FE0',
-                message: "ℹ️ El pipeline finalizó (sea éxito o fallo) en *${env.JOB_NAME}* #${env.BUILD_NUMBER}"
-            )
+            echo "Fin del pipeline"
         }
     }
 }
+
 
